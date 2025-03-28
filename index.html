@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>Stereoscopic Subtitle Exporter</title>
+
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="./renderer.js"></script>
+    <script type="text/javascript" src="js/exportconvergencevalues.js"></script>
+    <script type="text/javascript" src="js/smpte-timecode.js"></script>
+    <script type="text/javascript" src="js/subtitlexml.js"></script>
+
+    <link rel="stylesheet" type= "text/css" href="css/styles.css" />
+</head>
+
+<body>
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="img/logo.png" alt="Logo">
+            </td>
+            <td>
+                <h2>Stereoscopic Subtitles Exporter</h2>
+            </td>
+            <td>
+              <div id="version">Alaric Hamacher<br>version 1.0.0<br>
+                <a href="http://lab3d.kw.ac.kr">http://lab3d.kw.ac.kr</a></div>
+
+            </td>
+            <td>
+              <div id="version">
+              <img width="50px" src="img/3dlablogo.png" alt="3DlabLogo">
+            </div>
+            </td>
+        </tr>
+    </table>
+    <h3>1. Create 2D Subtitles:</h3>
+    <p>Create a subtitle track as you would in 2D.
+      Render only the subtitle track to a movie with alpha.
+      If it is a 3D project render only one eye and make sure to check
+      burn in option for subtitles. Name the exported movie subtitles.mov .</p>
+    <h3>2. Reimport the 2D Subtitle Movie with Alpha</h3>
+    <p>Import the asset subtitle.mov file. Convert the 2D file to stereoscopic 3D
+    with the context menu on right mouse click.</p>
+    <h3>3. Generate 3D Subtitle EDL</h3>
+    <p>Click Create EDL to create an EDL of the first subtitle track.
+    Copy the result and save it to a file subtitles.edl .</p>
+    <textarea id="EDLTextArea" rows="5" cols="100"></textarea>
+
+    <table>
+        <tr>
+            <td>
+                <input  type="button" value="Create EDL" onclick="Execute()" />
+                <input  type="button" value="Clear" onclick="ClearEDL()" />
+                <input  type="button" id="saveedl" value="Save EDL" />
+            </td>
+        </tr>
+    </table>
+    <h3>4. Import the 3D Subtitle EDL:</h3>
+    <p>Create a new Timline using import EDL. The Timline will have the exact cuts
+      and positions of the subtitles. Select all the clips on the timeline and
+    copy them to a new track on the top of your project timeline.</p>
+    <h3>5. Adjust Subtitle Convergence Values:</h3>
+    <p>Position your subtitles. Apply changes in convergence.
+    You can also use keyframes to create animations.</p>
+    <h3>6. Generate a DCDM sterescopic subtitle file:</h3>
+    <p>Retrieve the convergence values and keyframes with the button create 3D subs.
+    Copy and modify your subtitles for your further mastering process.</p>
+    <textarea id="OutTextArea" rows="5" cols="100"></textarea>
+    <table width="100%">
+        <tr>
+          <td><fieldset>
+  <legend>Choose your Options</legend>
+  <div>
+    <input type="checkbox" id="cbvariablez" name="variablez" />
+    <label for="variablez">use variableZ</label>
+  </div>
+</fieldset></td>
+<td>  <label for="fname">Subtitle AnnotationText:</label><br>
+  <input type="text" size="40" id="annotationText" name="annotationText" value="3D subs made with Davinci"><br></td>
+        </tr>
+        <tr>
+            <td>
+                <input  type="button" value="Create 3D Subtitles" onclick="Execute()" />
+                <input  type="button" value="Clear" onclick="ClearSubs()" />
+                <input  type="button" id="savexml" value="Save XML" />
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+body {
+    background-color: black;
+    color: gray;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 12px;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-sizing: border-box;
+}
+
+h3 {
+  color: gray;
+  font-size: 14px;
+}
+
+textarea {
+    background-color: gray;
+    color: black;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    border:1px solid #999999;
+    width:100%;
+    margin:5px 0;
+    padding:3px;
+}
+
+#version {
+    color: gray;
+    text-align: right;
+    font-size: 11px;
+}
+
+#clogo {
+    text-align: right;
+}

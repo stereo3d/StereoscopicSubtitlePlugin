@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlackmagicDesign>
+    <Plugin>
+        <Id>de.virtual-experience.resolve.stereoscopicsubtitleplugin</Id>
+        <Name>Sample Plugin</Name>
+        <Version>1.0</Version>
+        <Description>Stereoscopic Subtitle Plugin</Description>
+        <FilePath>main.js</FilePath>
+    </Plugin>
+</BlackmagicDesign>

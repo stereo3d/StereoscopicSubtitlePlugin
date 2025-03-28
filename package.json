@@ -1,0 +1,9 @@
+{
+  "name": "Stereoscopic Subtitle Plugin",
+  "version": "1.0.0",
+  "description": "Helper for creating 3D Digital Cinema subtitles",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  }
+}

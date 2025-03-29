@@ -1,10 +1,12 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 
+/*
 // Perform action on DOM loaded.
-//window.addEventListener('DOMContentLoaded', async () => {
-//    await loadRenderPreset();
-//});
+window.addEventListener('DOMContentLoaded', async () => {
+     await loadRenderPreset();
+});
+*/
 
 // Loads render preset list.
 async function loadRenderPreset() {
@@ -73,109 +75,6 @@ async function saveProject() {
     console.log('Saved project');
 }
 
-// Creates a new bin.
-async function createBin() {
-    const binName = document.getElementById('binName').value;
-    if (!binName) {
-        alert('Error: Bin name is empty!');
-        return;
-    }
-
-    await window.resolveAPI.openPage('media');
-
-    // Create new bin in root bin
-    const bin = await window.resolveAPI.createBin(binName)
-    if (!bin) {
-        alert(`Error: Failed to create bin: ${binName}`);
-        return;
-    }
-
-    console.log(`Created bin: ${binName}`);
-}
-
-// Selects a bin.
-async function selectBin() {
-    const binName = document.getElementById('binName').value;
-    if (!binName) {
-        alert('Error: Bin name is empty!');
-        return;
-    }
-
-    await window.resolveAPI.openPage('media');
-
-    const isSuccess = await window.resolveAPI.selectBin(binName)
-    if (!isSuccess) {
-        alert(`Error: Failed to select bin: ${binName}`);
-        return;
-    }
-
-    console.log(`Selected bin: ${binName}`);
-}
-
-// Deletes a bin.
-async function deleteBin() {
-    const binName = document.getElementById('binName').value;
-    if (!binName) {
-        alert('Error: Bin name is empty!');
-        return;
-    }
-
-    await window.resolveAPI.openPage('media');
-
-    const isSuccess = await window.resolveAPI.deleteBin(binName)
-    if (!isSuccess) {
-        alert(`Error: Failed to delete bin: ${binName}`);
-        return;
-    }
-
-    console.log(`Deleted bin: ${binName}`);
-}
-
-// Add clips to media pool.
-async function addClips() {
-    // Get selected file paths
-    const selectedFileInputs = document.getElementById('fileSelectClips');
-    let filePathsArray = [];
-    for (const fileInput of selectedFileInputs.files) {
-        filePathsArray.push(fileInput.path);
-    }
-
-    if (filePathsArray.length === 0) {
-        alert('Error: Empty file list detected!');
-        return;
-    }
-
-    await window.resolveAPI.openPage('media');
-
-    // Add clips to the current folder
-    const clips = await window.resolveAPI.addClips(filePathsArray)
-    if (!clips) {
-        alert(`Error: Failed to add clips: ${filePathsArray}`);
-        return;
-    }
-
-    console.log(`Added clips: ${filePathsArray}`);
-}
-
-// Creates a new timeline with all the clips in current folder.
-async function createTimeline() {
-    const timelineName = document.getElementById('timelineName').value;
-    if (!timelineName) {
-        alert('Error: Timeline name is empty!');
-        return;
-    }
-
-    await window.resolveAPI.openPage('media');
-
-    // Create timeline with current folder clips
-    const timeline = await window.resolveAPI.createTimeline(timelineName);
-    if (!timeline) {
-        alert(`Error: Failed to create timeline: ${timelineName}`);
-        return;
-    }
-
-    console.log(`Created timeline: ${timelineName}`);
-}
 
 // Selects a timeline using name.
 async function selectTimeline() {
@@ -255,6 +154,7 @@ function saveEDL() {
   console.log(`calling saveEDL function`);
   console.log(`calling saveEDL. EDLtext: ${EDLtext}`);
   window.resolveAPI.saveEDL(EDLtext);
+  console.log(`calling saveEDL function`);
 }
 
 function saveXML() {

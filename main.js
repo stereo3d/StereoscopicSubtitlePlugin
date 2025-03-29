@@ -674,10 +674,12 @@ async function makeXML(variableZ, annotationText) {
 
     });
 
-        return xdoc.toString();
+    //    return xdoc.toString();
 
     outText += "\n\n";
 
-    EDLTextArea.value += makeEDL(timeline,1);
+    return outText;
+
+    // EDLTextArea.value += makeEDL(timeline,1);
 
 }

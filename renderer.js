@@ -240,9 +240,10 @@ async function makeEDL() {
 
 async function makeXML() {
   const XMLtext = document.getElementById('XMLTextArea');
-  const variableZ = document.getElementById('cbvariablez').value;
+  const variableZ = document.getElementById('cbvariablez').checked;
   const annotationText = document.getElementById('annotationText').value;
-  XMLtext.value = await window.resolveAPI.makeXML(variableZ.checked, annotationText);
+  console.log(`Call makeXML: ${variableZ}  ${annotationText}`);
+  XMLtext.value = await window.resolveAPI.makeXML(variableZ, annotationText);
 }
 
 function saveEDL() {

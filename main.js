@@ -586,7 +586,7 @@ async function makeXML(variableZ, annotationText) {
     xdoc = new DCDMSubtitleXML();
 
 
-    xdoc.addHeader();
+    // xdoc.addHeader();
 
     xdoc.addElement("Id","urn:uuid:"+uuid());
     xdoc.addElement("ContentTitleText","Stereoscopic Subtitles: "+timelineName);
@@ -599,7 +599,7 @@ async function makeXML(variableZ, annotationText) {
     xdoc.addElement("StartTime","00:00:00:00");
     xdoc.addElement("DisplayType","MainSubtitle");
     xdoc.addElementWithParam("LoadFont","urn:uuid:"+uuid(),"ID","MyFont");
-    xdoc.addElement("SubtitleList","");
+    // xdoc.addElement("SubtitleList","");
     xdoc.addFont("MyFont","FFFFFFFF","normal","40");
 
     // alert(TrackItems[0].GetName())
@@ -614,8 +614,11 @@ async function makeXML(variableZ, annotationText) {
       tstart = convertTime(fstart,framerate);
       tend = convertTime(fend,framerate);
 
-      currentsub = xdoc.addSubtitle(index+1,tstart,tend);
+      let currentsub = xdoc.addSubtitle(index+1,tstart,tend);
 
+      //outText += currentsub;
+
+      /* later
       convpair = "";
       conv = element.GetStereoConvergenceValues();
       zframes = 0;
@@ -654,15 +657,6 @@ async function makeXML(variableZ, annotationText) {
       }
 
 
-
-      //for (const [key, value] of Object.entries(conv)) {
-      //   newkey = parseInt(key)+1;
-      //   newvalue = (parseInt(value)/timelineWidth*100).toFixed(2);
-      //   convpair += newkey + ":" + newvalue + " ";
-      //};
-
-      // if checkbox is checked set convpair to 0 to omit VariableZ
-
       if (variableZ == false) {
         convpair = "0"
       };
@@ -672,13 +666,15 @@ async function makeXML(variableZ, annotationText) {
       outText += "F:"+ index + " fr start: "+fstart+" fr end: "+fend + " stereo: " + convpair + " \n";
       outText += "T:"+ index + " tc start: "+tstart+" tc end: "+tend + " stereo: " + convpair + " \n";
 
+     */
+
     });
 
-    //    return xdoc.toString();
+    return xdoc.toString();
 
     outText += "\n\n";
 
-    return outText;
+    // return outText;
 
     // EDLTextArea.value += makeEDL(timeline,1);
 

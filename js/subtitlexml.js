@@ -12,8 +12,8 @@ module.exports = class DCDMSubtitleXML {
 
   class DCDMSubtitleXML {
     constructor(xdoc = null) {
-      this.ns = "http://www.smpte-ra.org/schemas/428-7/2014/DCST";
-      this.nsprefix = ""; // Or "dcst:" if you want prefixed tags
+      this.nsprefix = "http://www.smpte-ra.org/schemas/428-7/2014/DCST";
+      this.ns = ""; // Or "dcst:" if you want prefixed tags
 
       if (xdoc) {
         // Use provided XML document
@@ -21,7 +21,7 @@ module.exports = class DCDMSubtitleXML {
       } else {
         // Create a new XML document with the root element
         this.doc = create()
-          .ele('DCSubtitle', { xmlns: this.ns }); // You can also use this.nsprefix + 'DCSubtitle' if needed
+        this.root = this.doc.ele('SubtitleReel'); // You can also use this.nsprefix + 'DCSubtitle' if needed
       }
     }
 
@@ -41,11 +41,11 @@ module.exports = class DCDMSubtitleXML {
   */
   addHeader() {
   // Create a new document with processing instruction and root element
-  this.doc.ins('xml', 'version="1.0" encoding="UTF-8"') // Adds <?xml version="1.0" encoding="UTF-8"?>
-  this.doc.ele(this.nsprefix + 'SubtitleReel', {
-      xmlns: this.ns,
-      'xmlns:xs': 'http://www.w3.org/2001/XMLSchema'
-    });
+  // this.doc.ins('xml', 'version="1.0" encoding="UTF-8"') // Adds <?xml version="1.0" encoding="UTF-8"?>
+  //this.doc.ele(this.nsprefix + 'SubtitleReel', {
+  //    xmlns: this.ns,
+  //    'xmlns:xs': 'http://www.w3.org/2001/XMLSchema'
+  //  });
 
   return "addHeader";
 }
@@ -57,7 +57,7 @@ module.exports = class DCDMSubtitleXML {
   */
   // To get the final XML string
 toString(pretty = true) {
-  return this.doc.end({ prettyPrint: pretty });
+  return this.doc.end({ prettyPrint: pretty, headless: true});
 }
 
 /*  addElement(elementname, elementvalue) {
@@ -70,15 +70,16 @@ toString(pretty = true) {
 */
 
 addElement(elementname, elementvalue) {
-  const targetTag = this.nsprefix + 'SubtitleReel';
+  //const targetTag = this.nsprefix + 'SubtitleReel';
 
   // Find the first element with the given tag name
-  const root = this.doc.find(node => node.node.nodeName === targetTag);
+  // const root = this.doc.find(node => node.node.nodeName === targetTag);
+  const root = this.root;
 
   if (root) {
-    root.ele(elementname).txt(elementvalue);
+    root.ele(elementname).txt(elementvalue).up();
   } else {
-    console.warn(`Element <${targetTag}> not found in document.`);
+    console.warn(`Element not found in document.`);
   }
 }
 
@@ -93,18 +94,19 @@ addElement(elementname, elementvalue) {
   */
 
   addElementWithParam(elementName, elementValue, paramName, paramValue) {
-  const targetTag = this.nsprefix + 'SubtitleReel';
+
 
   // Find the first <SubtitleReel> element
-  const root = this.doc.find(node => node.node.nodeName === targetTag);
+  const root = this.root;
 
   if (root) {
     // Add new element with text content and an attribute
     root.ele(elementName)
         .att(paramName, paramValue)
-        .txt(elementValue);
+        .txt(elementValue)
+        .up();
   } else {
-    console.warn(`Element <${targetTag}> not found.`);
+    console.warn(`Element not found.`);
   }
 }
 
@@ -119,20 +121,25 @@ addElement(elementname, elementvalue) {
   } */
 
   addFont(FontID, Color, Weight, Size) {
-  const targetTag = this.nsprefix + 'SubtitleList';
+  //const targetTag = 'SubtitleList';
 
   // Find the <SubtitleList> element
-  const root = this.doc.find(node => node.node.nodeName === targetTag);
+  // const root = this.doc.find(node => node.node.localName === targetTag);
+  let parent = this.doc.find(node => node.node.localName === 'SubtitleList');
 
-  if (root) {
+  if (!parent) {
+    parent = this.doc.root().ele('SubtitleList');
+  }
+      this.subtitlelist = parent;
+  if (this.subtitlelist) {
     // Create a <Font> element with attributes and append it
-    root.ele(this.nsprefix + 'Font')
+    this.font = parent.ele('Font')
       .att('ID', FontID)
       .att('Color', Color)
       .att('Weight', Weight)
-      .att('Size', Size);
+      .att('Size', Size)
   } else {
-    console.warn(`Element <${targetTag}> not found.`);
+    console.log(`Element not found.`);
   }
 }
 
@@ -147,22 +154,22 @@ addElement(elementname, elementvalue) {
   } */
 
   addSubtitle(SpotNumber, TimeIn, TimeOut) {
-    const targetTag = this.nsprefix + 'Font';
 
     // Find the first <Font> element
-    const root = this.doc.find(node => node.node.nodeName === targetTag);
+    const root = this.font;
 
     if (root) {
       // Create a new <Subtitle> element with attributes
-      const subtitle = root.ele(this.nsprefix + 'Subtitle')
+      const subtitle = root.ele('Subtitle')
         .att('SpotNumber', SpotNumber)
         .att('TimeIn', TimeIn)
         .att('TimeOut', TimeOut);
+      console.warn(`Element  added.`);
 
       return subtitle;
     } else {
-      console.warn(`Element <${targetTag}> not found.`);
-      return null;
+      console.warn(`Element not found.`);
+      //return null;
     }
   }
 

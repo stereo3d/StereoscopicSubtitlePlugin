@@ -376,22 +376,6 @@ app.on('activate', function () {
 
 // Alaric Plugin code:
 
-/* function uuid() {
-    function randomDigit() {
-        if (crypto && crypto.getRandomValues) {
-            var rands = new Uint8Array(1);
-            crypto.getRandomValues(rands);
-            return (rands[0] % 16).toString(16);
-        } else {
-            return ((Math.random() * 16) | 0).toString(16);
-        }
-    }
-
-    var crypto = window.crypto || window.msCrypto;
-    return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit);
-}
-*/
-
 const crypto = require('crypto');
 
 function uuid() {
@@ -606,7 +590,6 @@ async function makeXML(variableZ, annotationText) {
 
     xdoc.addElement("Id","urn:uuid:"+uuid());
     xdoc.addElement("ContentTitleText","Stereoscopic Subtitles: "+timelineName);
-    // annotationText = document.getElementById("annotationText").value;
     xdoc.addElement("AnnotationText",annotationText);
     xdoc.addElement("IssueDate", new Date().toISOString().replace('Z','-00:00'));
     xdoc.addElement("ReelNumber", "1");
@@ -615,19 +598,16 @@ async function makeXML(variableZ, annotationText) {
     xdoc.addElement("TimeCodeRate",framerate);
     xdoc.addElement("StartTime","00:00:00:00");
     xdoc.addElement("DisplayType","MainSubtitle");
-    // xdoc.addElementWithParam("LoadFont","urn:uuid:"+uuid(),"ID","MyFont");
+    xdoc.addElementWithParam("LoadFont","urn:uuid:"+uuid(),"ID","MyFont");
     xdoc.addElement("SubtitleList","");
-    // xdoc.addFont("MyFont","FFFFFFFF","normal","40");
-
-    return xdoc.toString();
-
+    xdoc.addFont("MyFont","FFFFFFFF","normal","40");
 
     // alert(TrackItems[0].GetName())
     // Get all elements from the subtitletrack.
     TrackItems.forEach(function(element, index) {
       // get the text from the SubTrackItems
       subtext = SubTrackItems[index].GetName();
-      OutTextArea.value += subtext + "\n";
+      outText.value += subtext + "\n";
       fstart = parseInt(element.GetStart());
       fend = parseInt(element.GetEnd());
       // convert frames to TC
@@ -682,9 +662,8 @@ async function makeXML(variableZ, annotationText) {
       //};
 
       // if checkbox is checked set convpair to 0 to omit VariableZ
-      var cb = document.getElementById("cbvariablez");
-      console.log(cb);
-      if (cb.checked == false) {
+
+      if (variableZ == false) {
         convpair = "0"
       };
 
@@ -694,6 +673,8 @@ async function makeXML(variableZ, annotationText) {
       outText += "T:"+ index + " tc start: "+tstart+" tc end: "+tend + " stereo: " + convpair + " \n";
 
     });
+
+        return xdoc.toString();
 
     outText += "\n\n";
 

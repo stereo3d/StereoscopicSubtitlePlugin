@@ -82,7 +82,7 @@ addElement(elementname, elementvalue) {
   }
 }
 
-  addElementWithParam(elementname, elementvalue, paramName, paramValue) {
+/*  addElementWithParam(elementname, elementvalue, paramName, paramValue) {
     var newElem = this.doc.createElement(elementname);
     var newText = this.doc.createTextNode(elementvalue);
     newElem.appendChild(newText);
@@ -90,8 +90,25 @@ addElement(elementname, elementvalue) {
     root = this.doc.getElementsByTagName(this.nsprefix+"SubtitleReel")[0];
     root.appendChild(newElem);
   }
+  */
 
-  addFont(FontID, Color, Weight, Size) {
+  addElementWithParam(elementName, elementValue, paramName, paramValue) {
+  const targetTag = this.nsprefix + 'SubtitleReel';
+
+  // Find the first <SubtitleReel> element
+  const root = this.doc.find(node => node.node.nodeName === targetTag);
+
+  if (root) {
+    // Add new element with text content and an attribute
+    root.ele(elementName)
+        .att(paramName, paramValue)
+        .txt(elementValue);
+  } else {
+    console.warn(`Element <${targetTag}> not found.`);
+  }
+}
+
+/*  addFont(FontID, Color, Weight, Size) {
     var fontElem = this.doc.createElement(this.nsprefix+"Font");
     fontElem.setAttribute("ID",FontID);
     fontElem.setAttribute("Color", Color);
@@ -99,9 +116,27 @@ addElement(elementname, elementvalue) {
     fontElem.setAttribute("Size", Size);
     root = this.doc.getElementsByTagName(this.nsprefix+"SubtitleList")[0];
     root.appendChild(fontElem);
-  }
+  } */
 
-  addSubtitle(SpotNumber,TimeIn, TimeOut){
+  addFont(FontID, Color, Weight, Size) {
+  const targetTag = this.nsprefix + 'SubtitleList';
+
+  // Find the <SubtitleList> element
+  const root = this.doc.find(node => node.node.nodeName === targetTag);
+
+  if (root) {
+    // Create a <Font> element with attributes and append it
+    root.ele(this.nsprefix + 'Font')
+      .att('ID', FontID)
+      .att('Color', Color)
+      .att('Weight', Weight)
+      .att('Size', Size);
+  } else {
+    console.warn(`Element <${targetTag}> not found.`);
+  }
+}
+
+/*  addSubtitle(SpotNumber,TimeIn, TimeOut){
     root = this.doc.getElementsByTagName(this.nsprefix+"Font")[0];
     var subtitle = this.doc.createElement(this.nsprefix+"Subtitle");
     subtitle.setAttribute("SpotNumber", SpotNumber);
@@ -109,9 +144,29 @@ addElement(elementname, elementvalue) {
     subtitle.setAttribute("TimeOut", TimeOut);
     root.appendChild(subtitle);
     return subtitle;
+  } */
+
+  addSubtitle(SpotNumber, TimeIn, TimeOut) {
+    const targetTag = this.nsprefix + 'Font';
+
+    // Find the first <Font> element
+    const root = this.doc.find(node => node.node.nodeName === targetTag);
+
+    if (root) {
+      // Create a new <Subtitle> element with attributes
+      const subtitle = root.ele(this.nsprefix + 'Subtitle')
+        .att('SpotNumber', SpotNumber)
+        .att('TimeIn', TimeIn)
+        .att('TimeOut', TimeOut);
+
+      return subtitle;
+    } else {
+      console.warn(`Element <${targetTag}> not found.`);
+      return null;
+    }
   }
 
-  addText(subtitleref, Valign, Vposition, Zmax, Zposition, Text) {
+/*  addText(subtitleref, Valign, Vposition, Zmax, Zposition, Text) {
     // add variableZ firstChild
     if (Zposition != "0"){
     var varzElement = this.doc.createElement(this.nsprefix+"LoadVariableZ")
@@ -131,8 +186,32 @@ addElement(elementname, elementvalue) {
     }
     TextElement.appendChild(TextNode);
     subtitleref.appendChild(TextElement);
+  }*/
 
+  addText(subtitleref, Valign, Vposition, Zmax, Zposition, Text) {
+  if (!subtitleref) {
+    console.warn("Invalid subtitle reference passed to addText()");
+    return;
   }
+
+  // Optional <LoadVariableZ> element if Zposition is not "0"
+  if (Zposition !== "0") {
+    subtitleref.ele(this.nsprefix + "LoadVariableZ", { ID: "Zvector1" }).txt(Zposition);
+  }
+
+  // Create <Text> element with required attributes
+  const textElement = subtitleref.ele(this.nsprefix + "Text")
+    .att("Valign", Valign)
+    .att("Vposition", Vposition)
+    .att("Zposition", Zmax);
+
+  if (Zposition !== "0") {
+    textElement.att("VariableZ", "Zvector1");
+  }
+
+  // Set the text content
+  textElement.txt(Text);
+}
 
   }
 

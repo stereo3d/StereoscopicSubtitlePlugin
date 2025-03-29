@@ -603,6 +603,7 @@ async function makeXML(event, withVariableZ, annotationText) {
       convpair = "";
       conv = element.GetStereoConvergenceValues();
       zframes = 0;
+      Zmax = 0.0
 
       entriesCount = Object.entries(conv).length;
       console.log(entriesCount);
@@ -612,28 +613,33 @@ async function makeXML(event, withVariableZ, annotationText) {
         const [key, value] = Object.entries(conv)[0]
         newkey = fend - fstart;
         // transform absolute pixels in percentage of the image width.
-        newvalue = (-2*parseInt(value)/timelineWidth*100).toFixed(2);
+        newvalue = (-2.0*parseInt(value)/timelineWidth*100).toFixed(2);
         convpair = "0";
+        // only one value is the max
         Zmax = newvalue;
       } else {
         // iterate and calculate the duration
-        // find most forward value for ZValue
-        Zmax = 0;
-      for (let i = 1; i < entriesCount; i++) {
+        // find most forward (negative) value for ZValue
+        Zmax = 0.0;
+        for (let i = 1; i < entriesCount; i++) {
         const [key, value] = Object.entries(conv)[i];
         const [previouskey, previousvalue] = Object.entries(conv)[i-1];
           newkey = key - previouskey;
           // transform absolute pixels in percentage of the image width.
-          newvalue = (-2*parseInt(previousvalue)/timelineWidth*100).toFixed(2);
-          convpair += newkey + ":" + newvalue + " ";
+          newvalue = (-2.0*parseInt(previousvalue)/timelineWidth*100).toFixed(2);
+          convpair += newvalue + ":" + newkey + " ";
+          if (parseFloat(newvalue) < parseFloat(Zmax)) {
+            Zmax = newvalue;
+          }
           if (i == entriesCount-1) {
             newkey = fend - key;
             // transform values:
-            newvalue = (-2*parseInt(value)/timelineWidth*100).toFixed(2);
-            convpair += newkey + ":" + newvalue;
+            newvalue = (-2.0*parseInt(value)/timelineWidth*100).toFixed(2);
+            convpair += newvalue + ":" + newkey;
+            // identify if there is a morefront parallax.
           }
-          if (newkey<Zmax) {
-            Zmax = newkey;
+          if (parseFloat(newvalue) < parseFloat(Zmax)) {
+            Zmax = newvalue;
           }
           }
       }

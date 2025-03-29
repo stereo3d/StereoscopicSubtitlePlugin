@@ -37,6 +37,19 @@ advantage of its scripting features.
 The present version is at an early development stage. Please verify the results carefully.
 VariableZ position is derived from the keyframed convergence. However, it is optional in the SMPTE specification.
 
+## Installation
+
+Copy the folder StereoscopicSubtitlePlugin to your system:
+```
+/Library/Application Support/Blackmagic Design/Davinci Resolve/Workflow Integration Plugins
+```
+If the folder Workflow Integration Plugins does not exist you need to create it there.
+After restart the Plugin can be called via the menu Workspace - Workflow Integrations.
+
+## Demo Files
+
+The folder demo contains a Davinci Resolve Project archive to reproduce the workflow.
+
 ## Link to the Paper:
 Background and explanation about the Plugin-can be found here:
 

@@ -4,7 +4,19 @@ The purpose of this work is to elaborate a workflow for
 stereoscopic subtitle creation. The proposed method is based on a workflow using Davinci Resolve and takes
 advantage of its scripting features.
 
-## Workflow Automation Plugin for Davinci Resolve.
+## Requirements
+Davinci Resolve Studio
+
+## Background
+- tools are used to prepare the stereoscopic 3D screening of the Busan International Short Film Festival BISFF.
+
+https://www.bisff.org
+
+- other tools for transformation and validation can be found in the repository for DCDM_3DSUB_XSLT
+
+https://github.com/stereo3d/DCDM_3DSUB_XSLT
+
+## Workflow Integration Plugin for Davinci Resolve.
 
 1. Add regular 2D subtitles to a stereoscopic 3D project.
 2. Render only the subtitles to a video with alpha.
@@ -36,6 +48,11 @@ advantage of its scripting features.
 ## Limitations and Disclaimer
 The present version is at an early development stage. Please verify the results carefully.
 VariableZ position is derived from the keyframed convergence. However, it is optional in the SMPTE specification.
+
+##
+Testing on cinema hardware is in progress. Any help will be sincerely appreciated.
+DCPoMatic from version 2.18.15 supports VariableZ in DCDCM subtitles authoring.
+Results were tested on DCPoMatic player and EasyDCP player. The two ignore the VariableZ parameter in playback.
 
 ## Installation
 

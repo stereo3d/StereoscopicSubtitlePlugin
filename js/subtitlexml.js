@@ -27,31 +27,6 @@ module.exports = class DCDMSubtitleXML {
       }
     }
 
-
-  /*
-  addheader() {
-    const pi = this.doc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
-    this.doc.insertBefore(pi, this.doc.firstChild);
-    //var newElem = this.doc.createElementNS(this.ns,this.nsprefix+"SubtitleReel");
-    var newElem = this.doc.createElement(this.nsprefix+"SubtitleReel");
-    newElem.setAttribute("xmlns", this.ns);
-    newElem.setAttribute("xmlns:xs", "http://www.w3.org/2001/XMLSchema");
-    this.doc.appendChild(newElem);
-    var root = newElem
-    return "addheader";
-  }
-  */
-  addHeader() {
-  // Create a new document with processing instruction and root element
-  // this.doc.ins('xml', 'version="1.0" encoding="UTF-8"') // Adds <?xml version="1.0" encoding="UTF-8"?>
-  //this.doc.ele(this.nsprefix + 'SubtitleReel', {
-  //    xmlns: this.ns,
-  //    'xmlns:xs': 'http://www.w3.org/2001/XMLSchema'
-  //  });
-
-  return "addHeader";
-}
-
   // To get the final XML string
 toString(pretty = true) {
   return this.doc.end({ prettyPrint: pretty, headless: true});

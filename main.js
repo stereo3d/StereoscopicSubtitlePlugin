@@ -569,24 +569,8 @@ async function makeXML(event, withVariableZ, annotationText) {
 
     // global variable for the subtitle xml
     // create a new XML document
-    //var xmlDoc = document.implementation.createDocument(null, "", null);
 
-
-    /* const doc = create({ version: '1.0' })
-        .ele('note')
-          .ele('to').txt('Tove').up()
-          .ele('from').txt('Jani').up()
-          .ele('heading').txt('Reminder').up()
-          .ele('body').txt('Don\'t forget me this weekend!')
-        .end({ prettyPrint: true });
-        */
-
-    // const doc = create()
-    //.end({ prettyPrint: true });
     xdoc = new DCDMSubtitleXML();
-
-
-    // xdoc.addHeader();
 
     xdoc.addElement("Id","urn:uuid:"+uuid());
     xdoc.addElement("ContentTitleText","Stereoscopic Subtitles: "+timelineName);
@@ -659,7 +643,7 @@ async function makeXML(event, withVariableZ, annotationText) {
         convpair = "0"
       };
 
-      xdoc.addText(currentsub, "top","10.00",Zmax, convpair, subtext);
+      xdoc.addText(currentsub, "bottom","8",Zmax, convpair, subtext);
 
       outText += "F:"+ index + " fr start: "+fstart+" fr end: "+fend + " stereo: " + convpair + " \n";
       outText += "T:"+ index + " tc start: "+tstart+" tc end: "+tend + " stereo: " + convpair + " \n";

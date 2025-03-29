@@ -25,6 +25,7 @@ module.exports = class DCDMSubtitleXML {
     }
 
 
+  /*
   addheader() {
     const pi = this.doc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
     this.doc.insertBefore(pi, this.doc.firstChild);
@@ -36,10 +37,28 @@ module.exports = class DCDMSubtitleXML {
     var root = newElem
     return "addheader";
   }
-  toString() {
+  */
+  addHeader() {
+  // Create a new document with processing instruction and root element
+  this.doc = require('xmlbuilder2').create()
+    .ins('xml', 'version="1.0" encoding="UTF-8"') // Adds <?xml version="1.0" encoding="UTF-8"?>
+    .ele(this.nsprefix + 'SubtitleReel', {
+      xmlns: this.ns,
+      'xmlns:xs': 'http://www.w3.org/2001/XMLSchema'
+    });
+
+  return "addHeader";
+}
+
+  /* toString() {
     const docStr = new XMLSerializer().serializeToString(this.doc);
     return docStr;
   }
+  */
+  // To get the final XML string
+toString(pretty = true) {
+  return this.doc.end({ prettyPrint: pretty });
+}
 
 /*  addElement(elementname, elementvalue) {
     var newElem = this.doc.createElement(elementname);

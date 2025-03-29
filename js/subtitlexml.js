@@ -8,6 +8,7 @@ module.exports = class DCDMSubtitleXML {
     this.doc = xdoc;
   }
   */
+  const { create } = require('xmlbuilder2');
 
   class DCDMSubtitleXML {
     constructor(xdoc = null) {
@@ -19,7 +20,7 @@ module.exports = class DCDMSubtitleXML {
         this.doc = xdoc;
       } else {
         // Create a new XML document with the root element
-        this.doc = create({ version: '1.0' })
+        this.doc = create()
           .ele('DCSubtitle', { xmlns: this.ns }); // You can also use this.nsprefix + 'DCSubtitle' if needed
       }
     }
@@ -40,9 +41,8 @@ module.exports = class DCDMSubtitleXML {
   */
   addHeader() {
   // Create a new document with processing instruction and root element
-  this.doc = require('xmlbuilder2').create()
-    .ins('xml', 'version="1.0" encoding="UTF-8"') // Adds <?xml version="1.0" encoding="UTF-8"?>
-    .ele(this.nsprefix + 'SubtitleReel', {
+  this.doc.ins('xml', 'version="1.0" encoding="UTF-8"') // Adds <?xml version="1.0" encoding="UTF-8"?>
+  this.doc.ele(this.nsprefix + 'SubtitleReel', {
       xmlns: this.ns,
       'xmlns:xs': 'http://www.w3.org/2001/XMLSchema'
     });

@@ -376,7 +376,7 @@ app.on('activate', function () {
 
 // Alaric Plugin code:
 
-function uuid() {
+/* function uuid() {
     function randomDigit() {
         if (crypto && crypto.getRandomValues) {
             var rands = new Uint8Array(1);
@@ -389,6 +389,16 @@ function uuid() {
 
     var crypto = window.crypto || window.msCrypto;
     return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit);
+}
+*/
+
+const crypto = require('crypto');
+
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/[x]/g, (c) => {
+    const r = crypto.randomBytes(1)[0] % 16;
+    return r.toString(16);
+  });
 }
 
 var convertTime = function (frames, fps) {
@@ -587,19 +597,16 @@ async function makeXML(variableZ, annotationText) {
         .end({ prettyPrint: true });
         */
 
-    const doc = create({""})
-    .end({ prettyPrint: true });
-    xdoc = new DCDMSubtitleXML(doc);
+    // const doc = create()
+    //.end({ prettyPrint: true });
+    xdoc = new DCDMSubtitleXML();
 
 
     xdoc.addHeader();
-    console.log(xdoc.toString());
-
-    return xdoc.toString();
 
     xdoc.addElement("Id","urn:uuid:"+uuid());
     xdoc.addElement("ContentTitleText","Stereoscopic Subtitles: "+timelineName);
-    annotationText = document.getElementById("annotationText").value;
+    // annotationText = document.getElementById("annotationText").value;
     xdoc.addElement("AnnotationText",annotationText);
     xdoc.addElement("IssueDate", new Date().toISOString().replace('Z','-00:00'));
     xdoc.addElement("ReelNumber", "1");
@@ -608,9 +615,11 @@ async function makeXML(variableZ, annotationText) {
     xdoc.addElement("TimeCodeRate",framerate);
     xdoc.addElement("StartTime","00:00:00:00");
     xdoc.addElement("DisplayType","MainSubtitle");
-    xdoc.addElementWithParam("LoadFont","urn:uuid:"+uuid(),"ID","MyFont");
+    // xdoc.addElementWithParam("LoadFont","urn:uuid:"+uuid(),"ID","MyFont");
     xdoc.addElement("SubtitleList","");
-    xdoc.addFont("MyFont","FFFFFFFF","normal","40");
+    // xdoc.addFont("MyFont","FFFFFFFF","normal","40");
+
+    return xdoc.toString();
 
 
     // alert(TrackItems[0].GetName())

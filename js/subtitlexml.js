@@ -1,5 +1,7 @@
 // DCDM Subtitle xml
 /*
+© Alaric Hamacher 2025
+/
 module.exports = class DCDMSubtitleXML {
     ns = "http://www.smpte-ra.org/schemas/428-7/2014/DCST";
     nsprefix ="";
@@ -50,24 +52,11 @@ module.exports = class DCDMSubtitleXML {
   return "addHeader";
 }
 
-  /* toString() {
-    const docStr = new XMLSerializer().serializeToString(this.doc);
-    return docStr;
-  }
-  */
   // To get the final XML string
 toString(pretty = true) {
   return this.doc.end({ prettyPrint: pretty, headless: true});
 }
 
-/*  addElement(elementname, elementvalue) {
-    var newElem = this.doc.createElement(elementname);
-    var newText = this.doc.createTextNode(elementvalue);
-    newElem.appendChild(newText);
-    root = this.doc.getElementsByTagName(this.nsprefix+"SubtitleReel")[0];
-    root.appendChild(newElem);
-  }
-*/
 
 addElement(elementname, elementvalue) {
   //const targetTag = this.nsprefix + 'SubtitleReel';
@@ -83,19 +72,7 @@ addElement(elementname, elementvalue) {
   }
 }
 
-/*  addElementWithParam(elementname, elementvalue, paramName, paramValue) {
-    var newElem = this.doc.createElement(elementname);
-    var newText = this.doc.createTextNode(elementvalue);
-    newElem.appendChild(newText);
-    newElem.setAttribute(paramName, paramValue);
-    root = this.doc.getElementsByTagName(this.nsprefix+"SubtitleReel")[0];
-    root.appendChild(newElem);
-  }
-  */
-
   addElementWithParam(elementName, elementValue, paramName, paramValue) {
-
-
   // Find the first <SubtitleReel> element
   const root = this.root;
 
@@ -110,21 +87,8 @@ addElement(elementname, elementvalue) {
   }
 }
 
-/*  addFont(FontID, Color, Weight, Size) {
-    var fontElem = this.doc.createElement(this.nsprefix+"Font");
-    fontElem.setAttribute("ID",FontID);
-    fontElem.setAttribute("Color", Color);
-    fontElem.setAttribute("Weight", Weight);
-    fontElem.setAttribute("Size", Size);
-    root = this.doc.getElementsByTagName(this.nsprefix+"SubtitleList")[0];
-    root.appendChild(fontElem);
-  } */
-
   addFont(FontID, Color, Weight, Size) {
-  //const targetTag = 'SubtitleList';
 
-  // Find the <SubtitleList> element
-  // const root = this.doc.find(node => node.node.localName === targetTag);
   let parent = this.doc.find(node => node.node.localName === 'SubtitleList');
 
   if (!parent) {
@@ -142,16 +106,6 @@ addElement(elementname, elementvalue) {
     console.log(`Element not found.`);
   }
 }
-
-/*  addSubtitle(SpotNumber,TimeIn, TimeOut){
-    root = this.doc.getElementsByTagName(this.nsprefix+"Font")[0];
-    var subtitle = this.doc.createElement(this.nsprefix+"Subtitle");
-    subtitle.setAttribute("SpotNumber", SpotNumber);
-    subtitle.setAttribute("TimeIn", TimeIn);
-    subtitle.setAttribute("TimeOut", TimeOut);
-    root.appendChild(subtitle);
-    return subtitle;
-  } */
 
   addSubtitle(SpotNumber, TimeIn, TimeOut) {
 
@@ -173,27 +127,6 @@ addElement(elementname, elementvalue) {
     }
   }
 
-/*  addText(subtitleref, Valign, Vposition, Zmax, Zposition, Text) {
-    // add variableZ firstChild
-    if (Zposition != "0"){
-    var varzElement = this.doc.createElement(this.nsprefix+"LoadVariableZ")
-    varzElement.setAttribute("ID","Zvector1");
-    var varzValues = this.doc.createTextNode(Zposition);
-    varzElement.appendChild(varzValues);
-    subtitleref.appendChild(varzElement);
-    }
-    // add the textelement
-    var TextElement = this.doc.createElement(this.nsprefix+"Text");
-    var TextNode = this.doc.createTextNode(Text);
-    TextElement.setAttribute("Valign",Valign);
-    TextElement.setAttribute("Vposition", Vposition);
-    TextElement.setAttribute("Zposition", Zmax);
-    if (Zposition != "0"){
-    TextElement.setAttribute("VariableZ","Zvector1");
-    }
-    TextElement.appendChild(TextNode);
-    subtitleref.appendChild(TextElement);
-  }*/
 
   addText(subtitleref, Valign, Vposition, Zmax, Zposition, Text) {
   if (!subtitleref) {
@@ -203,11 +136,11 @@ addElement(elementname, elementvalue) {
 
   // Optional <LoadVariableZ> element if Zposition is not "0"
   if (Zposition !== "0") {
-    subtitleref.ele(this.nsprefix + "LoadVariableZ", { ID: "Zvector1" }).txt(Zposition);
+    subtitleref.ele("LoadVariableZ", { ID: "Zvector1" }).txt(Zposition);
   }
 
   // Create <Text> element with required attributes
-  const textElement = subtitleref.ele(this.nsprefix + "Text")
+  const textElement = subtitleref.ele("Text")
     .att("Valign", Valign)
     .att("Vposition", Vposition)
     .att("Zposition", Zmax);
@@ -222,4 +155,4 @@ addElement(elementname, elementvalue) {
 
   }
 
-  module.exports = DCDMSubtitleXML;
+module.exports = DCDMSubtitleXML;

@@ -509,7 +509,7 @@ async function makeEDL() {
 
 
 
-async function makeXML(variableZ, annotationText) {
+async function makeXML(event, withVariableZ, annotationText) {
 
     // Get resolve object
     resolve = await WorkflowIntegration.GetResolve();
@@ -616,9 +616,6 @@ async function makeXML(variableZ, annotationText) {
 
       let currentsub = xdoc.addSubtitle(index+1,tstart,tend);
 
-      //outText += currentsub;
-
-      /* later
       convpair = "";
       conv = element.GetStereoConvergenceValues();
       zframes = 0;
@@ -631,7 +628,7 @@ async function makeXML(variableZ, annotationText) {
         const [key, value] = Object.entries(conv)[0]
         newkey = fend - fstart;
         // transform absolute pixels in percentage of the image width.
-        newvalue = (parseInt(value)/timelineWidth*100).toFixed(2);
+        newvalue = (-2*parseInt(value)/timelineWidth*100).toFixed(2);
         convpair = "0";
         Zmax = newvalue;
       } else {
@@ -643,11 +640,12 @@ async function makeXML(variableZ, annotationText) {
         const [previouskey, previousvalue] = Object.entries(conv)[i-1];
           newkey = key - previouskey;
           // transform absolute pixels in percentage of the image width.
-          newvalue = (parseInt(previousvalue)/timelineWidth*100).toFixed(2);
+          newvalue = (-2*parseInt(previousvalue)/timelineWidth*100).toFixed(2);
           convpair += newkey + ":" + newvalue + " ";
           if (i == entriesCount-1) {
             newkey = fend - key;
-            newvalue = (parseInt(value)/timelineWidth*100).toFixed(2);
+            // transform values:
+            newvalue = (-2*parseInt(value)/timelineWidth*100).toFixed(2);
             convpair += newkey + ":" + newvalue;
           }
           if (newkey<Zmax) {
@@ -657,7 +655,7 @@ async function makeXML(variableZ, annotationText) {
       }
 
 
-      if (variableZ == false) {
+      if (withVariableZ == false) {
         convpair = "0"
       };
 
@@ -666,16 +664,11 @@ async function makeXML(variableZ, annotationText) {
       outText += "F:"+ index + " fr start: "+fstart+" fr end: "+fend + " stereo: " + convpair + " \n";
       outText += "T:"+ index + " tc start: "+tstart+" tc end: "+tend + " stereo: " + convpair + " \n";
 
-     */
-
     });
 
     return xdoc.toString();
 
     outText += "\n\n";
 
-    // return outText;
-
-    // EDLTextArea.value += makeEDL(timeline,1);
 
 }

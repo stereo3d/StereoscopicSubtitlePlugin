@@ -103,7 +103,7 @@ addElement(elementname, elementvalue) {
   }
 
 
-  addText(subtitleref, Valign, Vposition, Zmax, Zposition, Text) {
+  addText(subtitleref, Valign, Vposition, Halign, Direction, Zmax, Zposition, Text) {
   if (!subtitleref) {
     console.warn("Invalid subtitle reference passed to addText()");
     return;
@@ -118,6 +118,8 @@ addElement(elementname, elementvalue) {
   const textElement = subtitleref.ele("Text")
     .att("Valign", Valign)
     .att("Vposition", Vposition)
+    .att("Halign", Halign)
+    .att("Direction", Direction)
     .att("Zposition", Zmax);
 
   if (Zposition !== "0") {

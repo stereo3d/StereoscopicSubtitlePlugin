@@ -653,7 +653,7 @@ async function makeXML(event, withVariableZ, annotationText) {
         convpair = "0"
       };
 
-      xdoc.addText(currentsub, "bottom","8",Zmax, convpair, subtext);
+      xdoc.addText(currentsub, "bottom","8", "center", "ltr",Zmax, convpair, subtext);
 
       outText += "F:"+ index + " fr start: "+fstart+" fr end: "+fend + " stereo: " + convpair + " \n";
       outText += "T:"+ index + " tc start: "+tstart+" tc end: "+tend + " stereo: " + convpair + " \n";

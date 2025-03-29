@@ -1,0 +1,40 @@
+# Stereoscopic Subtitles Plugin
+
+The purpose of this work is to elaborate a workflow for
+stereoscopic subtitle creation. The proposed method is based on a workflow using Davinci Resolve and takes
+advantage of its scripting features.
+
+## Workflow Automation Plugin for Davinci Resolve.
+
+<picture>
+   <img src="images/screen01.jpg" alt="screen01" width="300" height="auto" />
+</picture>
+
+
+
+
+## Link to the Paper:
+Background and explanation about the Plugin-can be found here:
+
+https://doi.org/10.56581/IJLEMR.9.02.51-59
+
+## Bibtex Reference for Quote:
+```
+@article{hamacher_digital_2024,
+	title = {Digital {Cinema} {Stereoscopic} {Subtitle} {Workflow}},
+	volume = {9},
+	issn = {24554847},
+	url = {http://www.ijlemr.com/papers/volume9-issue02/7-IJLEMR-88956.pdf},
+	doi = {10.56581/IJLEMR.9.02.51-59},
+	abstract = {Subtitles in Digital Cinema are well established for monoscopic formats. They are often used, when dubbing is not available such as film festivals and international arthouse distribution. A wide range of authoring tools is available and subtitles can easily be added in Digital Cinema Packages. This simple language version creation method facilitates international distribution of movies. Mastering of stereoscopic movies and subtitles however, requires specialized tools for visualization and authoring. It is therefore common to see stereoscopic movies with lower quality subtitles or no subtitles as all when the language versions are burned into the movie. This makes the creation of international language versions much more costly than for monoscopic movies. Although Digital Cinema standards specify monoscopic and stereoscopic subtitles, they are rarely applied because of a lack of affordable authoring tools. The purpose of this paper is to elaborate a workflow for stereoscopic subtitle creation. The proposed method is based on a workflow using Davinci Resolve and takes advantage of its scripting features.},
+	language = {en},
+	number = {2},
+	urldate = {2025-01-29},
+	journal = {International Journal of Latest Engineering and Management Research (IJLEMR)},
+	author = {Hamacher, Alaric},
+	month = feb,
+	year = {2024},
+	pages = {51--59},
+	file = {Hamacher - 2024 - Digital Cinema Stereoscopic Subtitle Workflow.pdf:/Users/alarix/Zotero/storage/RCNWTHCD/Hamacher - 2024 - Digital Cinema Stereoscopic Subtitle Workflow.pdf:application/pdf},
+}
+```

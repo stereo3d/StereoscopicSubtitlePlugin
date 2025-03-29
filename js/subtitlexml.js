@@ -1,4 +1,5 @@
 // DCDM Subtitle xml
+/*
 module.exports = class DCDMSubtitleXML {
     ns = "http://www.smpte-ra.org/schemas/428-7/2014/DCST";
     nsprefix ="";
@@ -6,6 +7,24 @@ module.exports = class DCDMSubtitleXML {
   constructor(xdoc) {
     this.doc = xdoc;
   }
+  */
+
+  class DCDMSubtitleXML {
+    constructor(xdoc = null) {
+      this.ns = "http://www.smpte-ra.org/schemas/428-7/2014/DCST";
+      this.nsprefix = ""; // Or "dcst:" if you want prefixed tags
+
+      if (xdoc) {
+        // Use provided XML document
+        this.doc = xdoc;
+      } else {
+        // Create a new XML document with the root element
+        this.doc = create({ version: '1.0' })
+          .ele('DCSubtitle', { xmlns: this.ns }); // You can also use this.nsprefix + 'DCSubtitle' if needed
+      }
+    }
+
+
   addheader() {
     const pi = this.doc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
     this.doc.insertBefore(pi, this.doc.firstChild);
@@ -22,13 +41,27 @@ module.exports = class DCDMSubtitleXML {
     return docStr;
   }
 
-  addElement(elementname, elementvalue) {
+/*  addElement(elementname, elementvalue) {
     var newElem = this.doc.createElement(elementname);
     var newText = this.doc.createTextNode(elementvalue);
     newElem.appendChild(newText);
     root = this.doc.getElementsByTagName(this.nsprefix+"SubtitleReel")[0];
     root.appendChild(newElem);
   }
+*/
+
+addElement(elementname, elementvalue) {
+  const targetTag = this.nsprefix + 'SubtitleReel';
+
+  // Find the first element with the given tag name
+  const root = this.doc.find(node => node.node.nodeName === targetTag);
+
+  if (root) {
+    root.ele(elementname).txt(elementvalue);
+  } else {
+    console.warn(`Element <${targetTag}> not found in document.`);
+  }
+}
 
   addElementWithParam(elementname, elementvalue, paramName, paramValue) {
     var newElem = this.doc.createElement(elementname);
@@ -83,3 +116,5 @@ module.exports = class DCDMSubtitleXML {
   }
 
   }
+
+  module.exports = DCDMSubtitleXML;

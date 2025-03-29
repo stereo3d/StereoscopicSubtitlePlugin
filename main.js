@@ -498,7 +498,7 @@ async function makeEDL() {
   console.log();
   console.log("timecode module test.");
 
-  // return "EDL text",new Timecode(300,24,false).toString()
+  // currenttimeline and fisrst subtitle track.
 
   edl = getEDL(timeline, 1);
 
@@ -557,8 +557,10 @@ async function makeXML(event, withVariableZ, annotationText) {
     outText += "Timeline Name: " + timelineName + " FPS: " + framerate ;
     outText += "\n" + "start: "+startFrame+" end: "+endFrame + "\n";
 
-    // the stereoscopic subtitles are on track 3
-    var TrackItems = timeline.GetItemListInTrack("video", 3);
+    // the stereoscopic subtitles are on top track.
+    // Get the number of video tracks in the timeline
+    var video_track_count = timeline.GetTrackCount("video")
+    var TrackItems = timeline.GetItemListInTrack("video", video_track_count);
     var count = Object.keys(TrackItems).length;
     outText += "items on track: " + count + "\n";
 

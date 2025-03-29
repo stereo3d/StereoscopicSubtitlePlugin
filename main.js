@@ -320,8 +320,10 @@ function registerResolveEventHandlers() {
 async function createWindow () {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 900,
-        height: 825,
+      width: 800,
+      height: 800,
+      minWidth:800,
+      minHeight:800,
         useContentSize: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
@@ -329,7 +331,7 @@ async function createWindow () {
     });
 
     // activate the Debugger
-    mainWindow.openDevTools();
+    // mainWindow.openDevTools();
 
 
     // Hide the menu bar (enable below code to hide menu bar)

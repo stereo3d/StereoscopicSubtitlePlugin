@@ -1,9 +1,12 @@
 {
-  "name": "Stereoscopic Subtitle Plugin",
+  "name": "Stereoscopic Subtitles Plugin",
   "version": "1.0.0",
   "description": "Helper for creating 3D Digital Cinema subtitles",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
+  },
+  "dependencies": {
+    "xmlbuilder2": "^3.1.1"
   }
 }

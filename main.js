@@ -3,9 +3,24 @@
 // Modules to control application life and create native browser window.
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const WorkflowIntegration = require('./WorkflowIntegration.node')
+const os = require('os');
+const WorkflowIntegration = require('./WorkflowIntegration.node');
+const Timecode = require('./js/smpte-timecode.js')
 
-const PLUGIN_ID = 'de.virtual-experience.resolve.stereoscopicsubtitleplugin';
+const { create } = require('xmlbuilder2');
+
+let DCDMSubtitleXML = require('./js/subtitlexml.js')
+
+const fs = require('fs');
+const { dialog } = require('electron')
+
+
+const PLUGIN_ID = 'de.virtual-experience.resolve.stereoscopicsubtitlesplugin';
+
+isInitialized = WorkflowIntegration.Initialize(PLUGIN_ID);
+ if (!isInitialized) {
+             alert("Error: Failed to initialize!");
+         }
 
 // Cached objects
 let resolveObj = null;
@@ -293,9 +308,16 @@ function registerResolveEventHandlers() {
     ipcMain.handle('resolve:renderTimeline', renderTimeline);
     // RenderPreset
     ipcMain.handle('resolve:getRenderPresets', getRenderPresets);
+    //
+    //
+    // Added by Alaric
+    ipcMain.handle('resolve:makeEDL', makeEDL);
+    ipcMain.handle('resolve:saveEDL', saveEDL);
+    ipcMain.handle('resolve:saveXML', saveXML);
+    ipcMain.handle('resolve:makeXML', makeXML);
 }
 
-function createWindow () {
+async function createWindow () {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 900,
@@ -305,6 +327,10 @@ function createWindow () {
             preload: path.join(__dirname, 'preload.js')
         }
     });
+
+    // activate the Debugger
+    mainWindow.openDevTools();
+
 
     // Hide the menu bar (enable below code to hide menu bar)
     //mainWindow.setMenu(null);
@@ -347,3 +373,322 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your plugin specific main process
 // code. You can also put them in separate files and require them here.
+
+// Alaric Plugin code:
+
+function uuid() {
+    function randomDigit() {
+        if (crypto && crypto.getRandomValues) {
+            var rands = new Uint8Array(1);
+            crypto.getRandomValues(rands);
+            return (rands[0] % 16).toString(16);
+        } else {
+            return ((Math.random() * 16) | 0).toString(16);
+        }
+    }
+
+    var crypto = window.crypto || window.msCrypto;
+    return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit);
+}
+
+var convertTime = function (frames, fps) {
+    fps = (typeof fps !== 'undefined' ?  fps : 30 );
+    var pad = function(input) {return (input < 10) ? "0" + input : input;},
+        seconds = (typeof frames !== 'undefined' ?  frames / fps : 0 );
+    return [
+        pad(Math.floor(seconds / 3600)),
+        pad(Math.floor(seconds % 3600 / 60)),
+        pad(Math.floor(seconds % 60)),
+        pad(Math.floor(frames % fps))
+    ].join(':');
+}
+
+function pad(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
+}
+
+async function saveEDL(event, EDLtext) {
+    // Resolves to a Promise<Object>
+    const { filePath, canceled } = await dialog.showSaveDialog({
+        title: 'Select the File Path to save',
+        defaultPath: app.getPath("desktop")+path.sep+("subtitles.edl"),
+        buttonLabel: 'Save',
+        // Restricting the user to only Text Files.
+        filters: [
+            {
+                name: 'EDL',
+                extensions: ['edl']
+            }, ],
+        properties: []
+    });
+
+        if (filePath && !canceled) {
+            const docStr = EDLtext;
+            // Creating and Writing to the file
+            fs.writeFile(filePath,
+                         docStr, function (err) {
+                if (err) throw err;
+            });
+        }
+        return 0;
+}
+
+async function saveXML(event, XMLtext) {
+    // Resolves to a Promise<Object>
+    const { filePath, canceled } = await dialog.showSaveDialog({
+        title: 'Select the File Path to save',
+        defaultPath: app.getPath("desktop")+path.sep+("subtitles.xml"),
+        buttonLabel: 'Save',
+        // Restricting the user to only Text Files.
+        filters: [
+            {
+                name: 'XML',
+                extensions: ['xml']
+            }, ],
+        properties: []
+    });
+
+        if (filePath && !canceled) {
+            const docStr = XMLtext;
+            // Creating and Writing to the file
+            fs.writeFile(filePath,
+                         docStr, function (err) {
+                if (err) throw err;
+            });
+        }
+        return 0;
+}
+
+/// make the EDLtext
+
+async function getEDL(timeline, subtitletrackNR) {
+    var edl = "";
+    edl += "TITLE: " + timeline.GetName() + "\n";
+    framerate = timeline.GetSetting("timelineFrameRate");
+
+    var TrackItems = timeline.GetItemListInTrack("subtitle", subtitletrackNR);
+    TrackItems.forEach(function(element, index) {
+      // get the text from the SubTrackItems
+
+      fstart = parseInt(element.GetStart());
+      fend = parseInt(element.GetEnd());
+      tstart = convertTime(fstart,framerate);
+      tend = convertTime(fend,framerate);
+      fname = "subtitles.mov";
+
+    edl += pad(index+1,3) + "  AX       V     C        "
+          + tstart + " " + tend + " "
+          + tstart + " " + tend + "\n"
+          + "* FROM CLIP NAME: " + fname + "\n\n";
+
+    });
+
+    return edl;
+}
+
+async function makeEDL() {
+  // Get resolve object
+  resolve = await WorkflowIntegration.GetResolve();
+  if (!resolve) {
+      alert("Error: Failed to get resolve object!");
+      return;
+  }
+
+  // Get supporting objects
+  projectManager = await resolve.GetProjectManager();
+  project = await projectManager.GetCurrentProject();
+  timeline = await project.GetCurrentTimeline(); // current timeline
+
+  //testing the timecode module.
+  console.log();
+  console.log("timecode module test.");
+
+  // return "EDL text",new Timecode(300,24,false).toString()
+
+  edl = getEDL(timeline, 1);
+
+  return edl;
+
+}
+
+
+
+
+async function makeXML(variableZ, annotationText) {
+
+    // Get resolve object
+    resolve = await WorkflowIntegration.GetResolve();
+    if (!resolve) {
+        alert("Error: Failed to get resolve object!");
+        return;
+    }
+
+    // Get supporting objects
+    projectManager = await resolve.GetProjectManager();
+    project = await projectManager.GetCurrentProject();
+    timeline = await project.GetCurrentTimeline(); // current timeline
+
+    //testing the timecode module.
+    console.log(new Timecode(300,24,false).toString());
+    console.log("timecode module test.");
+
+    // var OutTextArea = document.getElementById("OutTextArea");
+    // OutTextArea.innerText = "";
+
+    var outText = "";
+
+    // var EDLTextArea = document.getElementById("EDLTextArea");
+    // EDLTextArea.innerText = "";
+
+    var EDLtext = "";
+
+    if (!timeline) {
+        alert("Error: No current timeline exist, add a timeline (recommended duration >= 80 frames) and try again!");
+        return;
+    }
+
+    // Open Edit page
+    resolve.OpenPage("edit");
+
+    // Get timeline frames
+    startFrame = parseInt(timeline.GetStartFrame());
+    endFrame = parseInt(timeline.GetEndFrame());
+    numFrames = endFrame - startFrame;
+    framerate = timeline.GetSetting("timelineFrameRate");
+    timelineName = timeline.GetName();
+    timelineWidth = parseInt(timeline.GetSetting("timelineResolutionWidth"));
+    console.log(timelineWidth);
+
+    outText += "Timeline Name: " + timelineName + " FPS: " + framerate ;
+    outText += "\n" + "start: "+startFrame+" end: "+endFrame + "\n";
+
+    // the stereoscopic subtitles are on track 3
+    var TrackItems = timeline.GetItemListInTrack("video", 3);
+    var count = Object.keys(TrackItems).length;
+    outText += "items on track: " + count + "\n";
+
+    var SubTrackItems = timeline.GetItemListInTrack("subtitle", 1);
+    var count = Object.keys(SubTrackItems).length;
+    outText += "items on subtitle track: " + count + "\n";
+
+
+    // global variable for the subtitle xml
+    // create a new XML document
+    //var xmlDoc = document.implementation.createDocument(null, "", null);
+
+
+    const doc = create({ version: '1.0' })
+        .ele('note')
+          .ele('to').txt('Tove').up()
+          .ele('from').txt('Jani').up()
+          .ele('heading').txt('Reminder').up()
+          .ele('body').txt('Don\'t forget me this weekend!')
+        .end({ prettyPrint: true });
+
+    xdoc = new DCDMSubtitleXML(doc);
+
+
+
+    return doc;
+
+
+    let xmlDoc = new DOMParser().parseFromString("",'text/xml')
+    xdoc = new DCDMSubtitleXML(xmlDoc);
+
+    xdoc.addheader();
+    console.log(xdoc.toString());
+    xdoc.addElement("Id","urn:uuid:"+uuid());
+    xdoc.addElement("ContentTitleText","Stereoscopic Subtitles: "+timelineName);
+    annotationText = document.getElementById("annotationText").value;
+    xdoc.addElement("AnnotationText",annotationText);
+    xdoc.addElement("IssueDate", new Date().toISOString().replace('Z','-00:00'));
+    xdoc.addElement("ReelNumber", "1");
+    xdoc.addElement("Language","en");
+    xdoc.addElement("EditRate",framerate+" 1");
+    xdoc.addElement("TimeCodeRate",framerate);
+    xdoc.addElement("StartTime","00:00:00:00");
+    xdoc.addElement("DisplayType","MainSubtitle");
+    xdoc.addElementWithParam("LoadFont","urn:uuid:"+uuid(),"ID","MyFont");
+    xdoc.addElement("SubtitleList","");
+    xdoc.addFont("MyFont","FFFFFFFF","normal","40");
+
+
+    // alert(TrackItems[0].GetName())
+    // Get all elements from the subtitletrack.
+    TrackItems.forEach(function(element, index) {
+      // get the text from the SubTrackItems
+      subtext = SubTrackItems[index].GetName();
+      OutTextArea.value += subtext + "\n";
+      fstart = parseInt(element.GetStart());
+      fend = parseInt(element.GetEnd());
+      // convert frames to TC
+      tstart = convertTime(fstart,framerate);
+      tend = convertTime(fend,framerate);
+
+      currentsub = xdoc.addSubtitle(index+1,tstart,tend);
+
+      convpair = "";
+      conv = element.GetStereoConvergenceValues();
+      zframes = 0;
+
+      entriesCount = Object.entries(conv).length;
+      console.log(entriesCount);
+
+      if (entriesCount == 1) {
+        // set duration to total subtitle duration.
+        const [key, value] = Object.entries(conv)[0]
+        newkey = fend - fstart;
+        // transform absolute pixels in percentage of the image width.
+        newvalue = (parseInt(value)/timelineWidth*100).toFixed(2);
+        convpair = "0";
+        Zmax = newvalue;
+      } else {
+        // iterate and calculate the duration
+        // find most forward value for ZValue
+        Zmax = 0;
+      for (let i = 1; i < entriesCount; i++) {
+        const [key, value] = Object.entries(conv)[i];
+        const [previouskey, previousvalue] = Object.entries(conv)[i-1];
+          newkey = key - previouskey;
+          // transform absolute pixels in percentage of the image width.
+          newvalue = (parseInt(previousvalue)/timelineWidth*100).toFixed(2);
+          convpair += newkey + ":" + newvalue + " ";
+          if (i == entriesCount-1) {
+            newkey = fend - key;
+            newvalue = (parseInt(value)/timelineWidth*100).toFixed(2);
+            convpair += newkey + ":" + newvalue;
+          }
+          if (newkey<Zmax) {
+            Zmax = newkey;
+          }
+          }
+      }
+
+
+
+      //for (const [key, value] of Object.entries(conv)) {
+      //   newkey = parseInt(key)+1;
+      //   newvalue = (parseInt(value)/timelineWidth*100).toFixed(2);
+      //   convpair += newkey + ":" + newvalue + " ";
+      //};
+
+      // if checkbox is checked set convpair to 0 to omit VariableZ
+      var cb = document.getElementById("cbvariablez");
+      console.log(cb);
+      if (cb.checked == false) {
+        convpair = "0"
+      };
+
+      xdoc.addText(currentsub, "top","10.00",Zmax, convpair, subtext);
+
+      outText += "F:"+ index + " fr start: "+fstart+" fr end: "+fend + " stereo: " + convpair + " \n";
+      outText += "T:"+ index + " tc start: "+tstart+" tc end: "+tend + " stereo: " + convpair + " \n";
+
+    });
+
+    outText += "\n\n";
+
+    EDLTextArea.value += makeEDL(timeline,1);
+
+}

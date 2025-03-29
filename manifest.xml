@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <BlackmagicDesign>
     <Plugin>
-        <Id>de.virtual-experience.resolve.stereoscopicsubtitleplugin</Id>
-        <Name>Sample Plugin</Name>
+        <Id>de.virtual-experience.resolve.stereoscopicsubtitlesplugin</Id>
+        <Name>Stereoscopic Subtitles Plugin</Name>
         <Version>1.0</Version>
-        <Description>Stereoscopic Subtitle Plugin</Description>
+        <Description>Helper for creating 3D Digital Cinema subtitles</Description>
         <FilePath>main.js</FilePath>
     </Plugin>
 </BlackmagicDesign>

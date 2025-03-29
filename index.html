@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>Stereoscopic Subtitle Plugin</title>
+    <title>Stereoscopic Subtitles Plugin</title>
 
-    <script type="text/javascript" src="js/app.js"></script>
-    <script type="text/javascript" src="./renderer.js"></script>
-    <script type="text/javascript" src="js/exportconvergencevalues.js"></script>
+    <!-- script type="text/javascript" src="js/exportconvergencevalues.js"></script>
     <script type="text/javascript" src="js/smpte-timecode.js"></script>
-    <script type="text/javascript" src="js/subtitlexml.js"></script>
+    <script type="text/javascript" src="js/subtitlexml.js"></script -->
+
+    <script type="text/javascript" src="./renderer.js"></script>
+
 
     <link rel="stylesheet" type= "text/css" href="css/styles.css" />
 </head>
@@ -51,7 +52,7 @@
     <table>
         <tr>
             <td>
-                <input  type="button" id="createdl" value="create EDL" onclick="createEDL()" />
+                <input  type="button" id="createdl" value="create EDL" onclick="makeEDL()" />
                 <input  type="button" id="clearedl" value="clear EDL" onclick="clearEDL()" />
                 <input  type="button" id="saveedl" value="save EDL" onclick="saveEDL()" />
             </td>
@@ -67,7 +68,7 @@
     <h3>6. Generate a DCDM sterescopic subtitle file:</h3>
     <p>Retrieve the convergence values and keyframes with the button create 3D subs.
     Copy and modify your subtitles for your further mastering process.</p>
-    <textarea id="OutTextArea" rows="5" cols="100"></textarea>
+    <textarea id="XMLTextArea" rows="5" cols="100"></textarea>
     <table width="100%">
         <tr>
           <td><fieldset>
@@ -82,9 +83,9 @@
         </tr>
         <tr>
             <td>
-                <input  type="button" id="create3dsub" value="Create 3D Subtitles" onclick="create3Dsub()" />
-                <input  type="button" id="clearsubs" value="Clear" onclick="clearSubs()" />
-                <input  type="button" id="savexml" value="Save XML" onclick="saveXML()"/>
+                <input  type="button" id="makeXML" value="Make 3D Subtitles" onclick="makeXML()" />
+                <input  type="button" id="clearXML" value="Clear" onclick="clearXML()" />
+                <input  type="button" id="saveXML" value="Save XML" onclick="saveXML()"/>
             </td>
         </tr>
     </table>

@@ -2,9 +2,9 @@
 // be executed in the renderer process for that window.
 
 // Perform action on DOM loaded.
-window.addEventListener('DOMContentLoaded', async () => {
-    await loadRenderPreset();
-});
+//window.addEventListener('DOMContentLoaded', async () => {
+//    await loadRenderPreset();
+//});
 
 // Loads render preset list.
 async function loadRenderPreset() {
@@ -221,4 +221,48 @@ async function renderTimeline() {
     }
 
     console.log(`Render timeline started: ${timelineName}`);
+}
+
+// Added by Alaric
+
+function clearEDL() {
+    document.getElementById("EDLTextArea").value = "";
+}
+
+function clearXML() {
+    document.getElementById("XMLTextArea").value = "";
+}
+
+async function makeEDL() {
+  const EDLtext = document.getElementById('EDLTextArea');
+  EDLtext.value = await window.resolveAPI.makeEDL();
+}
+
+async function makeXML() {
+  const XMLtext = document.getElementById('XMLTextArea');
+  const variableZ = document.getElementById('cbvariablez').value;
+  const annotationText = document.getElementById('annotationText').value;
+  XMLtext.value = await window.resolveAPI.makeXML(variableZ, annotationText);
+}
+
+function saveEDL() {
+  const EDLtext = document.getElementById('EDLTextArea').value;
+  if (!EDLTextArea.value) {
+      alert('Error: EDL Area is empty!');
+      return;
+  }
+  console.log(`calling saveEDL function`);
+  console.log(`calling saveEDL. EDLtext: ${EDLtext}`);
+  window.resolveAPI.saveEDL(EDLtext);
+}
+
+function saveXML() {
+  const XMLtext = document.getElementById('XMLTextArea').value;
+  if (!XMLTextArea.value) {
+      alert('Error: XML Area is empty!');
+      return;
+  }
+  console.log(`calling saveXML function`);
+  console.log(`calling saveXML. XMLtext: ${XMLtext}`);
+  window.resolveAPI.saveXML(XMLtext);
 }

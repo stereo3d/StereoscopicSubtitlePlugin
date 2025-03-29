@@ -22,5 +22,10 @@ contextBridge.exposeInMainWorld('resolveAPI', {
     // Render
     renderTimeline: (timelineName, renderPresetName, targetDirPath, targetClipName) => ipcRenderer.invoke('resolve:renderTimeline', timelineName, renderPresetName, targetDirPath, targetClipName),
     // RenderPreset
-    getRenderPresets: () => ipcRenderer.invoke('resolve:getRenderPresets')
+    getRenderPresets: () => ipcRenderer.invoke('resolve:getRenderPresets'),
+    // added by Alaric
+    makeEDL: (EDLtext) => ipcRenderer.invoke('resolve:makeEDL', EDLtext),
+    saveEDL: (EDLtext) => ipcRenderer.invoke('resolve:saveEDL', EDLtext),
+    saveXML: (XMLtext) => ipcRenderer.invoke('resolve:saveXML', XMLtext),
+    makeXML: (variableZ, annotationText) => ipcRenderer.invoke('resolve:makeXML', variableZ, annotationText)
 })

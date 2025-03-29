@@ -23,7 +23,7 @@ module.exports = class DCDMSubtitleXML {
       } else {
         // Create a new XML document with the root element
         this.doc = create()
-        this.root = this.doc.ele('SubtitleReel'); // You can also use this.nsprefix + 'DCSubtitle' if needed
+        this.root = this.doc.ele(this.nsprefix, 'SubtitleReel'); // You can also use this.nsprefix + 'DCSubtitle' if needed
       }
     }
 

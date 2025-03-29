@@ -6,12 +6,36 @@ advantage of its scripting features.
 
 ## Workflow Automation Plugin for Davinci Resolve.
 
+1. Add regular 2D subtitles to a stereoscopic 3D project.
+2. Render only the subtitles to a video with alpha.
+
+
 <picture>
-   <img src="images/screen01.jpg" alt="screen01" width="300" height="auto" />
+   <img src="images/screen01.jpg" alt="screen01" width="400" height="auto" />
 </picture>
 
 
+3. Reimport the subtitle video as stereoscpic 3D
+4. use the EDL generator to split the subtitles video track according to the subtitles.
 
+
+<picture>
+   <img src="images/screen02.jpg" alt="screen02" width="400" height="auto" />
+</picture>
+
+
+5. Perform stereoscopic adjustment on the color page. Use stereoscopic preview mode (anaglyph).
+6. use the XML generator to generate a DCDM stereosopic subtitle file with the content from the subtitle track and the convergence value from the video track transposed to the Zposition tag.
+
+
+<picture>
+   <img src="images/screen03.jpg" alt="screen03" width="400" height="auto" />
+</picture>
+
+
+## Limitations and Disclaimer
+The present version is at an early development stage. Please verify the results carefully.
+VariableZ position is derived from the keyframed convergence. However, it is optional in the SMPTE specification.
 
 ## Link to the Paper:
 Background and explanation about the Plugin-can be found here:
